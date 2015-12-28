@@ -13,7 +13,7 @@ body {
 	cursor: default;
 	background: #cd310d;
 	background: -webit-gradient(linear, left top, left bottom, from(#b32b0c) to(#cd310d));
-	height: 34px;
+	height: 55px;
 	position: relative;
 	color:#fff;
 	-webkit-border-top-left-radius: 5px;
@@ -27,7 +27,7 @@ body {
 
 #cal .header span {
 	display: inline-block;
-	line-height: 34px; /* centers item horizontal */
+	line-height: 55px; /* centers item horizontal */
 }
 
 #cal .header .hook {
@@ -94,8 +94,8 @@ body {
 
 #cal td {
 	color: #2b2b2b;
-	width: 30px;
-	height: 30px;
+	width: 80px;
+	height: 65px;
 	line-height: 30px;
 	text-align: center;
 	border: 1px solid #e6e6e6;
@@ -115,8 +115,9 @@ body {
 }
 
 #cal #cal-frame td.today {
-	background: #ededed#;
-	color: #ececec;
+	background: #ededed;
+	color: black;
+	border: 0;
 	box-shadow: 1px 1px 0px #fff inset;
 	-webkit-box-shadow: 1px 1px 0px #fff inset;
 	-moz-box-shadow: 1px 1px 0px #fff inset;
