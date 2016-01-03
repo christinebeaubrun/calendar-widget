@@ -118,9 +118,6 @@ body {
 	background: #ededed;
 	color: black;
 	border: 0;
-	box-shadow: 1px 1px 0px #fff inset;
-	-webkit-box-shadow: 1px 1px 0px #fff inset;
-	-moz-box-shadow: 1px 1px 0px #fff inset;
 }
 
 #cal #cal-frame td:not(.nil):hover {

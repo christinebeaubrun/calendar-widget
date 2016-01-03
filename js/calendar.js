@@ -1,72 +1,133 @@
-function CreateMonth () {
-	var months = [ 'January', 'Feburary', 'March', 'April', 'May','June','July','August','September','October','November','December' ],
-		daysOfWeek = [ 'Sun', 'Mon', 'Tue', 'Wed','Thu','Fri', 'Sat' ],
-		currentYear,
-		currentMonth,
-		currentDate = new Date(),
-		todayDate = currentDate.getDate(),
-		firstDayOfMonthSet;
+var createMonth = {
 
-	function createMonthYearLabel () {
-		currentMonth = currentDate.getMonth();
-		var currentMonthName = months[ currentDate.getMonth() ];
-		currentYear = currentDate.getFullYear();
-		var monthYear = currentMonthName + " " + currentYear;
+	createMonthYearLabel: function () { // make more MODULAR: REPEATED SEVERAL TIMES
+		var me = this;
+
+		var currentMonth = me.currentMonth; // the index of the current month ex. 0
+		var currentMonthName = me.months[ currentMonth ]; // get the name of current month ex. January
+		var monthYear = me.currentMonthYear = currentMonthName + " " + currentYear; // create ex. January 2016
 		
-		var $monthYearSpan = document.getElementsByClassName('month-year')[0];
-		$monthYearSpan.innerHTML = monthYear;
-	}
+		me.$monthYearSpan.innerHTML = monthYear;
+	},
 
-	function createDaysInMonth () {
-		var totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+	createDaysInMonth: function () {
+		var me = this;
+
+		var currentYear = me.currentYear,
+			currentMonth = me.currentMonth,
+			currentDateFull = new Date(currentYear, currentMonth);
+
+		var totalDaysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate(); // all days in a month
 		var firstDay = new Date(currentYear, currentMonth, 1);
-		firstDay = /[A-Za-z]{3}/.exec( firstDay )[0];
-		var lastDay = new Date(currentYear, currentMonth + 1, 0);
-		lastDay = /[A-Za-z]{3}/.exec( lastDay )[0];
+		firstDay = /[A-Za-z]{3}/.exec( firstDay )[0]; // day of the week when the month first begins ex. Tue
 
-		var calDays = 35;
-
-		var $monthTable = document.getElementsByClassName('current')[0];
-		var totalNumOfRows = 5;
+		var totalNumOfRows = 6; // using 6 rows to show an entire calendar month -- MAKE MORE MODULAR!!!
 		var dayCounter = 0;
+		var daysOfWeek = [ 'Sun', 'Mon', 'Tue', 'Wed','Thu','Fri', 'Sat' ];
+		var setFirstDayOfMonth; // to be set once to true
 
 		for (var i = 0; i < totalNumOfRows; i++) {
-			var $row = $monthTable.insertRow( i );
-			daysOfWeek.forEach( function( day, index ){
-				var $cell = $row.insertCell( index );
+			var $row = me.$monthTable.insertRow( i ); // creating a row
+			daysOfWeek.forEach( function( day, index ){ // iterating through the days of the week
+				var $cell = $row.insertCell( index ); // adding a cell to a row
+				currentDateFull.setHours(0,0,0,0);
 
-				if ( day === firstDay && !firstDayOfMonthSet ) {
+				if ( day === firstDay && !setFirstDayOfMonth ) {
 					dayCounter++;
-					firstDayOfMonthSet = true;
+					setFirstDayOfMonth = true;
 					$cell.innerHTML = dayCounter;
+
+					if ( me.currentMonthYear === me.todayMonthYear ) {
+						if ( dayCounter === me.todayDate ) { // MAKE MORE MODULAR
+							$cell.className = 'today'; // in case the first day of the month is today
+						}
+					}
+					
 					return;
 				}
 
-				if ( dayCounter === 0 || dayCounter === totalDays ) {
+				if ( dayCounter === 0 || dayCounter === totalDaysInMonth ) {
 					$cell.innerHTML = "";
 					$cell.className = 'nil';
-					return;
+					return; // dayCounter will not be triggered on empty days
 				}
 				
 				if ( dayCounter > 0  ) {
 					dayCounter++;
 					$cell.innerHTML = dayCounter;
 
-					if ( dayCounter === todayDate ) {
-						$cell.className = 'today';
+					if ( me.currentMonthYear === me.todayMonthYear ) {
+						if ( dayCounter === me.todayDate ) { // MAKE MORE MODULAR
+							$cell.className = 'today'; // in case the first day of the month is today
+						}
 					}
 				}
 			});
 		};
 	}
 	
-	return {
-		init: function () {
-			createMonthYearLabel();
-			createDaysInMonth();
-		}
-	};
 };
 
-var createMonth = CreateMonth();
-createMonth.init();
+function createCalendar () {
+	var me = this;
+
+	me.prevBtn = document.getElementsByClassName('left button')[0];
+	me.nextBtn = document.getElementsByClassName('right button')[0];
+	me.$monthYearSpan = document.getElementsByClassName('month-year')[0];
+	me.$monthTable = document.getElementsByClassName('current')[0];
+
+	me.months = [ 'January', 'Feburary', 'March', 'April', 'May','June','July','August','September','October','November','December' ];
+
+	me.todayDateFull = new Date();
+	me.currentYear = me.todayDateFull.getFullYear();
+	me.currentMonth = me.todayDateFull.getMonth();
+	me.todayDate = me.todayDateFull.getDate();
+	me.currentMonthName = me.months[ me.currentMonth ]; // get the name of current month ex. January
+	me.todayMonthYear = me.currentMonthName + " " + me.currentYear;
+
+	var createMonthYearLabel = createMonth.createMonthYearLabel,
+		createDaysInMonth = createMonth.createDaysInMonth;
+
+	createMonthYearLabel.call( me );
+	createDaysInMonth.call( me );
+
+	prevBtn.onclick = function () {
+		var me = this;
+
+		me.$monthYearSpan.innerHTML = "";
+		me.$monthTable.innerHTML = "";
+
+		if ( me.currentMonth === 0 ) {
+			// decrease the year
+			me.currentMonth = 11;
+			me.currentYear--;
+		} else  {
+			me.currentMonth--;
+		}
+
+		createMonthYearLabel.call( me );
+		createDaysInMonth.call( me );
+
+	}.bind( me );
+
+	nextBtn.onclick = function () {
+		var me = this;
+
+		me.$monthYearSpan.innerHTML = "";
+		me.$monthTable.innerHTML = "";
+
+		if ( me.currentMonth === 11 ) {
+			// increase the year
+			me.currentMonth = 0;
+			me.currentYear++;
+		} else {
+			me.currentMonth++;
+		}
+
+		createMonthYearLabel.call( me );
+		createDaysInMonth.call( me );
+
+	}.bind( me );
+}
+
+createCalendar();
