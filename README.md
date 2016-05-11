@@ -13,4 +13,4 @@ fork into your own account
 git clone via ssh in your terminal
 open HTML in your preferred browser
 
-Or just check it out here: https://jsfiddle.net/cbeaubrun/f4j6za8x/1/
+Or just check it out here: https://jsfiddle.net/cbeaubrun/mxr23n2c/1/
