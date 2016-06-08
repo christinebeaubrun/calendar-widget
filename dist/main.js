@@ -1,3 +1,4 @@
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require( './modules/calendar-module.js').createCalendar();
 // // /*
 // // 	(function calendarModule(){
@@ -201,3 +202,114 @@ require( './modules/calendar-module.js').createCalendar();
 // }
 
 // // createCalendar();
+},{"./modules/calendar-module.js":3}],2:[function(require,module,exports){
+var calendarDataService = require( '../services/calendar-data-service.js' );
+
+module.exports = {
+	create: function create () {
+
+		function getTodayDateFull () {
+			return new Date();
+		}
+
+		function getYear () {
+			return getTodayDateFull().getFullYear();
+		}
+
+		function getTodayMonthNumber () {
+			return getTodayDateFull().getMonth();
+		}
+
+		function getMonths (  ) {
+			return calendarDataService.getMonths();
+		}
+
+		return {
+			todayYear: function () {
+				return getYear();
+			},
+			todayMonth: function () {
+				var months = getMonths(),
+					monthNum = getTodayMonthNumber();
+				return months[ monthNum ] ;
+			},
+			todayDate: function () {
+				return getTodayDateFull();
+			},
+			decrementMonth: function () {
+				// logic for "going back in time"
+			},
+			incrementMonth: function () {
+				// logic for "going forward in time"
+			}
+		};
+	}
+};
+
+},{"../services/calendar-data-service.js":4}],3:[function(require,module,exports){
+var calendarModel = require( '../models/calendar-model.js' ).create();
+var domService = require( '../services/dom-elements-service.js' );
+
+/*
+	- createMonthYearLabel
+	-- current month name [ STRING ]
+	-- current year [ STRING | NUMBER ]
+	-- DOM element
+*/
+
+function createCurrentMonthYearLabel ( options ) {
+	// create the label that appears on top of the calendar
+	options.element.innerHTML = options.month + " " + options.year;
+}
+
+module.exports = {
+
+	createCalendar: function createCalendar () {
+
+		createCurrentMonthYearLabel({
+			month: calendarModel.todayMonth(),
+			year: calendarModel.todayYear(),
+			element: domService.getMonthYearHeader()
+		});
+	}
+};
+
+	// createCalendar();
+
+},{"../models/calendar-model.js":2,"../services/dom-elements-service.js":5}],4:[function(require,module,exports){
+module.exports = {
+	getMonths: function () {
+		return ['January',
+						'February',
+						'March',
+						'April',
+						'May',
+						'June',
+						'July',
+						'August',
+						'September',
+						'October',
+						'November',
+						'December'
+		];
+	},
+
+	getDaysOfWeek: function () {
+		return [ 'Sun', 'Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat' ];
+	}
+};
+},{}],5:[function(require,module,exports){
+function createCacheLoadFunction (load) {
+	var cache;
+
+	return function () {
+		return cache !== undefined ? cache : cache = load();
+	};
+}
+
+module.exports = {
+	getMonthYearHeader: createCacheLoadFunction (function () {
+		return document.getElementsByClassName('month-year')[0];
+	})
+};
+},{}]},{},[1]);

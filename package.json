@@ -1,0 +1,25 @@
+{
+  "name": "calendar-widget",
+  "version": "1.0.0",
+  "description": "Calender widget that displays current date, previous month, and the next month",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "watchify js/**/*.js -o dist/main.js -v",
+    "build": "browserify js/**/*.js | uglifyjs -mc warnings=false > dist/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/christinebeaubrun/calendar-widget.git"
+  },
+  "keywords": [
+    "calendar",
+    "widget"
+  ],
+  "author": "christine-b",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/christinebeaubrun/calendar-widget/issues"
+  },
+  "homepage": "https://github.com/christinebeaubrun/calendar-widget#readme"
+}
